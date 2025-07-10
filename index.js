@@ -26,6 +26,7 @@ function appendToDisplay(input) {
 
   display.value += input;
 }
+
 function Total() {
   try {
     let expression = display.value;
@@ -81,6 +82,8 @@ function Total() {
   } catch {
     display.value = "Error";
   }
+
+  resetDisplay = true;
 }
 
 function clearDisplay() {
