@@ -31,21 +31,25 @@ function Total() {
   try {
     let expression = display.value;
 
+    // Add 0 in front if starts with + or -
     if (expression[0] === "+" || expression[0] === "-") {
       expression = "0" + expression;
     }
 
+    // Remove trailing operators or dots
     while (/[+\-*/.]$/.test(expression)) {
       expression = expression.slice(0, -1);
     }
 
-    let tokens = expression.match(/(\d+\.?\d*|\.\d+|[+\-*/])/);
+    // ✅ Correct regex with global flag
+    let tokens = expression.match(/(\d+\.?\d*|\.\d+|[+\-*/])/g);
 
     if (!tokens) {
       display.value = "Error";
       return;
     }
 
+    // First pass: *, /
     let newTokens = [];
     let i = 0;
     while (i < tokens.length) {
@@ -61,6 +65,7 @@ function Total() {
       }
     }
 
+    // Second pass: +, -
     let result = parseFloat(newTokens[0]);
     i = 1;
     while (i < newTokens.length) {
@@ -78,6 +83,8 @@ function Total() {
   } catch {
     display.value = "Error";
   }
+
+  resetDisplay = true;
 }
 
 function clearDisplay() {
