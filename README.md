@@ -15,7 +15,7 @@ It performs basic arithmetic operations and is designed to work smoothly on both
 #Technologies Used
 - HTML5
 - CSS3 (Flexbox & Grid)
-- 
+  
 #Mobile & Desktop Support
 - Calculator adjusts its size and layout on different screens
 - Buttons remain round, easy to tap or click
