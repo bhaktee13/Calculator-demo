@@ -1,7 +1,5 @@
 const display = document.getElementById(`display`);
 
-let resetDisplay = false;
-
 function canAddDecimal() {
   const expression = display.value;
 
@@ -12,11 +10,6 @@ function canAddDecimal() {
 }
 
 function appendToDisplay(input) {
-  if (resetDisplay) {
-    display.value = "";
-    resetDisplay = false;
-  }
-
   const lastChar = display.value.slice(-1);
 
   if (input === ".") {
@@ -36,12 +29,16 @@ function appendToDisplay(input) {
 
 function Total() {
   try {
-    const expression = display.value;
-    const tokens = expression.match(/(\d+\.?\d*|[+\-*/])/g);
+    let expression = display.value;
+    let tokens = expression.match(/(\d+\.?\d*|\.\d+|[+\-*/])/g);
 
     if (!tokens) {
       display.value = "Error";
       return;
+    }
+
+    if (tokens[0] === "+" || tokens[0] === "-") {
+      tokens.unshift("0");
     }
 
     let newTokens = [];
@@ -58,6 +55,7 @@ function Total() {
         i++;
       }
     }
+
     let result = parseFloat(newTokens[0]);
     i = 1;
     while (i < newTokens.length) {
@@ -75,8 +73,6 @@ function Total() {
   } catch {
     display.value = "Error";
   }
-
-  resetDisplay = true;
 }
 
 function clearDisplay() {
