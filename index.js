@@ -30,19 +30,22 @@ function appendToDisplay(input) {
 function Total() {
   try {
     let expression = display.value;
+
+    // ✅ Insert 0 if starts with + or -
+    if (expression[0] === "+" || expression[0] === "-") {
+      expression = "0" + expression;
+    }
+
+    // ✅ Remove any trailing operators or dots
+    while (/[+\-*/.]$/.test(expression)) {
+      expression = expression.slice(0, -1);
+    }
+
     let tokens = expression.match(/(\d+\.?\d*|\.\d+|[+\-*/])/g);
 
     if (!tokens) {
       display.value = "Error";
       return;
-    }
-
-    if (tokens[0] === "+" || tokens[0] === "-") {
-      tokens.unshift("0");
-    }
-
-    if (/[+\-*/]$/.test(expression)) {
-      expression = expression.slice(0, -1);
     }
 
     let newTokens = [];
@@ -81,4 +84,8 @@ function Total() {
 
 function clearDisplay() {
   display.value = "";
+}
+
+function deleteLast() {
+  display.value = display.value.slice(0, -1);
 }
