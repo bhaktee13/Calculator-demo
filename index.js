@@ -31,17 +31,15 @@ function Total() {
   try {
     let expression = display.value;
 
-    // ✅ Insert 0 if starts with + or -
     if (expression[0] === "+" || expression[0] === "-") {
       expression = "0" + expression;
     }
 
-    // ✅ Remove any trailing operators or dots
     while (/[+\-*/.]$/.test(expression)) {
       expression = expression.slice(0, -1);
     }
 
-    let tokens = expression.match(/(\d+\.?\d*|\.\d+|[+\-*/])/g);
+    let tokens = expression.match(/(\d+\.?\d*|\.\d+|[+\-*/])/);
 
     if (!tokens) {
       display.value = "Error";
