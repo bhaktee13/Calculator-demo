@@ -1,0 +1,84 @@
+const display = document.getElementById(`display`);
+
+let resetDisplay = false;
+
+function canAddDecimal() {
+  const expression = display.value;
+
+  const parts = expression.split(/[\+\-\*\/]/);
+  const lastPart = parts[parts.length - 1];
+
+  return !lastPart.includes(".");
+}
+
+function appendToDisplay(input) {
+  if (resetDisplay) {
+    display.value = "";
+    resetDisplay = false;
+  }
+
+  const lastChar = display.value.slice(-1);
+
+  if (input === ".") {
+    if (display.value === "" || ["+", "-", "*", "/"].includes(lastChar)) {
+      return;
+    }
+
+    const parts = display.value.split(/[\+\-\*\/]/);
+    const lastNumber = parts[parts.length - 1];
+    if (lastNumber.includes(".")) {
+      return;
+    }
+  }
+
+  display.value += input;
+}
+
+function Total() {
+  try {
+    const expression = display.value;
+    const tokens = expression.match(/(\d+\.?\d*|[+\-*/])/g);
+
+    if (!tokens) {
+      display.value = "Error";
+      return;
+    }
+
+    let newTokens = [];
+    let i = 0;
+    while (i < tokens.length) {
+      if (tokens[i] === "*" || tokens[i] === "/") {
+        let prev = parseFloat(newTokens.pop());
+        let next = parseFloat(tokens[i + 1]);
+        let result = tokens[i] === "*" ? prev * next : prev / next;
+        newTokens.push(result);
+        i += 2;
+      } else {
+        newTokens.push(tokens[i]);
+        i++;
+      }
+    }
+    let result = parseFloat(newTokens[0]);
+    i = 1;
+    while (i < newTokens.length) {
+      let op = newTokens[i];
+      let num = parseFloat(newTokens[i + 1]);
+      if (op === "+") {
+        result += num;
+      } else if (op === "-") {
+        result -= num;
+      }
+      i += 2;
+    }
+
+    display.value = result;
+  } catch {
+    display.value = "Error";
+  }
+
+  resetDisplay = true;
+}
+
+function clearDisplay() {
+  display.value = "";
+}
