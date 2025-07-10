@@ -26,22 +26,18 @@ function appendToDisplay(input) {
 
   display.value += input;
 }
-
 function Total() {
   try {
     let expression = display.value;
 
-    // Add 0 in front if starts with + or -
     if (expression[0] === "+" || expression[0] === "-") {
       expression = "0" + expression;
     }
 
-    // Remove trailing operators or dots
     while (/[+\-*/.]$/.test(expression)) {
       expression = expression.slice(0, -1);
     }
 
-    // ✅ Correct regex with global flag
     let tokens = expression.match(/(\d+\.?\d*|\.\d+|[+\-*/])/g);
 
     if (!tokens) {
@@ -49,42 +45,42 @@ function Total() {
       return;
     }
 
-    // First pass: *, /
-    let newTokens = [];
+    for (let i = 0; i < tokens.length; i++) {
+      if (!isNaN(tokens[i])) {
+        tokens[i] = parseFloat(tokens[i]);
+      }
+    }
+
     let i = 0;
     while (i < tokens.length) {
       if (tokens[i] === "*" || tokens[i] === "/") {
-        let prev = parseFloat(newTokens.pop());
-        let next = parseFloat(tokens[i + 1]);
+        let prev = tokens[i - 1];
+        let next = tokens[i + 1];
         let result = tokens[i] === "*" ? prev * next : prev / next;
-        newTokens.push(result);
-        i += 2;
+        tokens.splice(i - 1, 3, result);
+        i = 0;
       } else {
-        newTokens.push(tokens[i]);
         i++;
       }
     }
 
-    // Second pass: +, -
-    let result = parseFloat(newTokens[0]);
-    i = 1;
-    while (i < newTokens.length) {
-      let op = newTokens[i];
-      let num = parseFloat(newTokens[i + 1]);
-      if (op === "+") {
-        result += num;
-      } else if (op === "-") {
-        result -= num;
+    i = 0;
+    while (i < tokens.length) {
+      if (tokens[i] === "+" || tokens[i] === "-") {
+        let prev = tokens[i - 1];
+        let next = tokens[i + 1];
+        let result = tokens[i] === "+" ? prev + next : prev - next;
+        tokens.splice(i - 1, 3, result);
+        i = 0;
+      } else {
+        i++;
       }
-      i += 2;
     }
 
-    display.value = result;
+    display.value = tokens[0];
   } catch {
     display.value = "Error";
   }
-
-  resetDisplay = true;
 }
 
 function clearDisplay() {
