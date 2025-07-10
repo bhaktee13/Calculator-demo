@@ -82,8 +82,6 @@ function Total() {
   } catch {
     display.value = "Error";
   }
-
-  resetDisplay = true;
 }
 
 function clearDisplay() {
