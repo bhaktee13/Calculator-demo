@@ -42,7 +42,7 @@ function Total() {
     }
 
     if (/[+\-*/]$/.test(expression)) {
-      expression = expression + "0";
+      expression = expression.slice(0, -1);
     }
 
     let newTokens = [];
