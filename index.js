@@ -41,6 +41,10 @@ function Total() {
       tokens.unshift("0");
     }
 
+    if (/[+\-*/]$/.test(expression)) {
+      expression = expression + "0";
+    }
+
     let newTokens = [];
     let i = 0;
     while (i < tokens.length) {
