@@ -21,5 +21,3 @@ It performs basic arithmetic operations and is designed to work smoothly on both
 - Buttons remain round, easy to tap or click
 - No overflow or scroll issues on phones
 - Looks exactly like the desktop design, only resized
-
-##NOTE - The '%' and '√' buttons are being build, and are not functional yet. If you use them, it may show 'Error'.
