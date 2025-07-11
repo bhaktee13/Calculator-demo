@@ -31,15 +31,23 @@ function Total() {
   try {
     let expression = display.value;
 
+    let endsWithPercent = expression.endsWith("%");
+
     if (expression[0] === "+" || expression[0] === "-") {
       expression = "0" + expression;
     }
 
-    while (/[+\-*/.]$/.test(expression)) {
+    while (/[+\-*/.√]$/.test(expression)) {
       expression = expression.slice(0, -1);
     }
 
-    let tokens = expression.match(/(\d+\.?\d*|\.\d+|[+\-*/])/g);
+    if (endsWithPercent) {
+      expression = expression.slice(0, -1);
+    }
+
+    expression = expression.replace(/(\d)(√)/g, "$1*$2");
+
+    let tokens = expression.match(/(\d+\.?\d*|\.\d+|[+\-*/√()])/g);
 
     if (!tokens) {
       display.value = "Error";
@@ -54,31 +62,29 @@ function Total() {
 
     let i = 0;
     while (i < tokens.length) {
-      if (tokens[i] === "*" || tokens[i] === "/") {
-        let prev = tokens[i - 1];
+      if (tokens[i] === "√") {
+        if (i + 1 >= tokens.length || isNaN(tokens[i + 1])) {
+          display.value = "Error";
+          return;
+        }
         let next = tokens[i + 1];
-        let result = tokens[i] === "*" ? prev * next : prev / next;
-        tokens.splice(i - 1, 3, result);
+        let result = Math.sqrt(next).toFixed(3);
+        result = parseFloat(result);
+        tokens.splice(i, 2, result);
         i = 0;
       } else {
         i++;
       }
     }
 
-    i = 0;
-    while (i < tokens.length) {
-      if (tokens[i] === "+" || tokens[i] === "-") {
-        let prev = tokens[i - 1];
-        let next = tokens[i + 1];
-        let result = tokens[i] === "+" ? prev + next : prev - next;
-        tokens.splice(i - 1, 3, result);
-        i = 0;
-      } else {
-        i++;
-      }
+    let finalExpr = tokens.join("");
+    let result = Function("return " + finalExpr)();
+
+    if (endsWithPercent) {
+      result = result * 100;
     }
 
-    display.value = tokens[0];
+    display.value = parseFloat(result.toFixed(3));
   } catch {
     display.value = "Error";
   }
