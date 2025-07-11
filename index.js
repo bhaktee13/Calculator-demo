@@ -1,14 +1,5 @@
 const display = document.getElementById(`display`);
 
-function canAddDecimal() {
-  const expression = display.value;
-
-  const parts = expression.split(/[\+\-\*\/]/);
-  const lastPart = parts[parts.length - 1];
-
-  return !lastPart.includes(".");
-}
-
 function appendToDisplay(input) {
   const lastChar = display.value.slice(-1);
 
